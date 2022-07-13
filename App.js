@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import Torch from 'react-native-torch';
 
 const style = StyleSheet.create({
   container: {
@@ -36,11 +37,19 @@ const style = StyleSheet.create({
 });
 
 const App = () => {
-  const toggled = true;
+  const [toggled, setToggled] = useState(false);
+
+  const handleToggle = () => setToggled(value => !value);
+
+  useEffect(() => {
+    // Controls phone flash light
+    Torch.switchState(toggled);
+    console.log('[DEBUG] flash light changed to:', toggled);
+  }, [toggled]);
 
   return (
     <View style={toggled ? style.containerLight : style.container} >
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={handleToggle}>
         <Image
           style={toggled ? style.lightingOn : style.lightingOff}
           source={
