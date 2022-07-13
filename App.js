@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Torch from 'react-native-torch';
+import RNShake from 'react-native-shake';
 
 const style = StyleSheet.create({
   container: {
@@ -46,6 +47,16 @@ const App = () => {
     Torch.switchState(toggled);
     console.log('[DEBUG] flash light changed to:', toggled);
   }, [toggled]);
+
+  useEffect(() => {
+    // When it shakes the phone, it changes toogle value.
+    const subs = RNShake.addListener(() => {
+      setToggled(value => !value);
+    });
+
+    // Unmounting component.
+    return () => subs.remove();
+  }, []);
 
   return (
     <View style={toggled ? style.containerLight : style.container} >
